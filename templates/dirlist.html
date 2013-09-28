@@ -1,0 +1,40 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}This is an example page{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default" role=navigation>
+      <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">Player</a>
+  </div>
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#about">About</a></li>
+              <li><a href="#contact">Contact</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row">
+      <!-- Main hero unit for a primary marketing message or call to action -->
+      <p>
+        <ul class="list-group">
+            {% for i in directoryList %}
+            <li class="list-group-item"><a href="{{i}}/">{{ i }}</a></li>
+            {% endfor %}
+        </ul>
+      </p>
+    </div>
+    </div>
+{% endblock %}
+

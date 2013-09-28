@@ -1,0 +1,84 @@
+{% extends "bootstrap/base.html" %}
+{% block title %}Playing}}{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default" role=navigation>
+      <div class="navbar-header">
+    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">Playing: {{name}}</a>
+  </div>
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="/">Home</a></li>
+              <li><a href="#album">from: </a></li>
+              <li><a href="#artist">by: </a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+    <div class="row">
+      <p>
+<audio id="music" controls autoplay preload="auto">
+    <source src="" type="audio/mpeg">
+      Your browser does not support the audio tag.
+</audio> 
+      </p>
+      <button id="next" class="glyphicon glyphicon-step-forward"></button>
+    </div>
+    </div>
+    <ul id=songSelector>
+            {% for i in directoryList %}
+            <a href="#" data-src="/static/{{i}}" data-name={{name}} data-album={{album}} data-artist={{artist}}>{{ i }}</a>
+            {% endfor %}
+    </ul>
+{% endblock %}
+{% block scripts %}
+<script src="/static/js/jquery.min.js/"></script>
+<script>
+var currentSong = $('#songSelector').find('a:first');
+var nextSong = function(){
+    var next = currentSong.next();
+    if ( next.length ) {
+        currentSong = next;
+    } else {
+        /* uncomment this if you want it to loop back to the beginning */ 
+        currentSong = $('#songSelector').find('a:first');
+    }
+    var testing = currentSong.attr('data-src');
+    var playme = document.getElementById('music');
+    playme.src=testing;
+    playme.load();
+    playme.play();
+
+};
+$(music).bind('ended', nextSong);
+$(next).bind('click', nextSong);
+$(function() {
+        var currentSongSrc = $('#songSelector').find('a:first').attr('data-src');
+        var playme = document.getElementById('music');
+        playme.src=currentSongSrc;
+        playme.load();
+        playme.play();
+});
+jQuery('[data-src]').click(function(event)
+{
+    var songsrc = $(event.currentTarget).attr('data-src');
+    setSong(songsrc);
+});
+var setSong = function(songSrc){
+    var playme = document.getElementById('music');
+    playme.src = songSrc;
+    playme.load();
+    playme.play();
+}
+</script>
+{% endblock %}
