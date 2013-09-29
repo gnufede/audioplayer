@@ -68,6 +68,7 @@ var setSong = function(song){
     var prevsong = $('#songSelector').find('li.active').removeClass("active");
     song.addClass("active");
     playme.load();
+    $(playpause_icon).removeClass("glyphicon-play").addClass("glyphicon-pause");
     playme.play();
 }
 var nextSong = function(){
@@ -84,13 +85,11 @@ var nextSong = function(){
 };
 var playpause = function(){
     if (playme.paused){
+        $(playpause_icon).removeClass("glyphicon-play").addClass("glyphicon-pause");
         playme.play();
-        $(playpause_icon).removeClass("glyphicon-pause");
-        $(playpause_icon).addClass("glyphicon-play");
     }else{
+        $(playpause_icon).removeClass("glyphicon-pause").addClass("glyphicon-play");
         playme.pause();
-        $(playpause_icon).removeClass("glyphicon-play");
-        $(playpause_icon).addClass("glyphicon-pause");
     }
 };
 $(music).bind('ended', nextSong);
