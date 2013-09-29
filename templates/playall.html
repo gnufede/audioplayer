@@ -1,5 +1,5 @@
 {% extends "bootstrap/base.html" %}
-{% block title %}Playing}}{% endblock %}
+{% block title %}Playing{% endblock %}
 
 {% block navbar %}
 <nav class="navbar navbar-default" role=navigation>
@@ -10,13 +10,19 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#">Playing: {{name}}</a>
+    <a class="navbar-brand active" id="name-info" href="#">Song</a>
   </div>
   <div class="collapse navbar-collapse navbar-ex1-collapse">
             <ul class="nav navbar-nav">
-              <li class="active"><a href="/">Home</a></li>
-              <li><a href="#album">from: </a></li>
-              <li><a href="#artist">by: </a></li>
+              <li><a id="album-info" href="#album">Album</a></li>
+              <li><a id="artist-info" href="#artist">Artist</a></li>
+            </ul>
+            <div class="navbar-form navbar-left">
+              <button id="playpause_icon" class="glyphicon glyphicon-pause btn btn-default"></button>
+              <button id="next" class="glyphicon glyphicon-step-forward btn btn-default"></button>
+            </div>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="pull-right"><a href="/">Home</a></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -26,59 +32,77 @@
 {% block content %}
     <div class="container">
     <div class="row">
+    <div class="col-md-4">
+    <ul id=songSelector class="nav nav-pills nav-stacked">
+            {% for i in directoryList %}
+            <li><a href="#" data-src="{{i[0]}}" data-name="{{ i[1] }}" data-album="{{ i[2] }}" data-artist="{{ i[3] }}">{{ i[1] }}</a></li>
+            {% endfor %}
+    </ul>
+    </div>
+    <div class="col-md-6">
       <p>
-<audio id="music" controls autoplay preload="auto">
+<audio id="music" autoplay preload="auto">
     <source src="" type="audio/mpeg">
       Your browser does not support the audio tag.
 </audio> 
       </p>
-      <button id="next" class="glyphicon glyphicon-step-forward"></button>
     </div>
     </div>
-    <ul id=songSelector>
-            {% for i in directoryList %}
-            <a href="#" data-src="/static/{{i}}" data-name={{name}} data-album={{album}} data-artist={{artist}}>{{ i }}</a>
-            {% endfor %}
-    </ul>
+    </div>
 {% endblock %}
 {% block scripts %}
-<script src="/static/js/jquery.min.js/"></script>
+<!--script src="/static/js/jquery.min.js/"></script-->
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 <script>
-var currentSong = $('#songSelector').find('a:first');
+$(function() {
+var currentSong = $('#songSelector').find('li:first');
+var playme = document.getElementById('music');
+var setSong = function(song){
+    currentSong = song;
+//    var playme = document.getElementById('music');
+    currSong = song.find("a");
+    playme.src = currSong.attr('data-src');
+    $("#artist-info").text(currSong.attr('data-artist'));
+    $("#album-info").text(currSong.attr('data-album'));
+    $("#name-info").text(currSong.attr('data-name'));
+    var prevsong = $('#songSelector').find('li.active').removeClass("active");
+    song.addClass("active");
+    playme.load();
+    playme.play();
+}
 var nextSong = function(){
     var next = currentSong.next();
     if ( next.length ) {
         currentSong = next;
     } else {
         /* uncomment this if you want it to loop back to the beginning */ 
-        currentSong = $('#songSelector').find('a:first');
+        currentSong = $('#songSelector').find('li:first');
     }
-    var testing = currentSong.attr('data-src');
-    var playme = document.getElementById('music');
-    playme.src=testing;
-    playme.load();
-    playme.play();
+    var testing = currentSong;
+    setSong(testing);
 
+};
+var playpause = function(){
+    if (playme.paused){
+        playme.play();
+        $(playpause_icon).removeClass("glyphicon-pause");
+        $(playpause_icon).addClass("glyphicon-play");
+    }else{
+        playme.pause();
+        $(playpause_icon).removeClass("glyphicon-play");
+        $(playpause_icon).addClass("glyphicon-pause");
+    }
 };
 $(music).bind('ended', nextSong);
 $(next).bind('click', nextSong);
-$(function() {
-        var currentSongSrc = $('#songSelector').find('a:first').attr('data-src');
-        var playme = document.getElementById('music');
-        playme.src=currentSongSrc;
-        playme.load();
-        playme.play();
-});
+$(playpause_icon).bind('click', playpause);
 jQuery('[data-src]').click(function(event)
 {
-    var songsrc = $(event.currentTarget).attr('data-src');
-    setSong(songsrc);
+    var song = $(event.currentTarget).parent();
+    setSong(song);
 });
-var setSong = function(songSrc){
-    var playme = document.getElementById('music');
-    playme.src = songSrc;
-    playme.load();
-    playme.play();
-}
+
+setSong(currentSong);
+});
 </script>
 {% endblock %}

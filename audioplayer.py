@@ -13,6 +13,12 @@ def static_subdir(subdir=None, filename=None):
     directory = "./static/" + subdir
     return send_from_directory(directory, filename)
 
+@app.route('/playall/<subdir>/<path:filename>/')
+def music_subdir(subdir=None, filename=None):
+
+    directory = musicDir + subdir
+    return send_from_directory(directory, filename)
+
 @app.route("/playall/")
 @app.route("/playall/<directory>/")
 def playall(directory=None):
@@ -20,7 +26,7 @@ def playall(directory=None):
         currentdir = musicDir
     else:
         currentdir = join(musicDir, directory)
-    directoryList =  [ d for d in listdir(currentdir) ]
+    directoryList =  [ [d, auto.File(join(currentdir,d)).title, auto.File(join(currentdir,d)).artist, auto.File(join(currentdir,d)).album] for d in listdir(currentdir) ]
     return render_template('playall.html', directoryList=directoryList, relativedir=directory, currentdir=currentdir[2:])
 
 @app.route("/play/music/<filename>/")
