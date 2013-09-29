@@ -35,20 +35,3 @@
     </div>
     </div>
 {% endblock %}
-{% block scripts %}
-<script>
-var currentSong = $('#songSelector').find('a:first');
-$(audio).bind('ended', function() {
-    var next = currentSong.next();
-    if ( next.length ) {
-        currentSong = next;
-    } else {
-        /* uncomment this if you want it to loop back to the beginning */ 
-        // currentSong = $('#songSelector').find('a:first');
-    }
-    var testing = currentSong.attr('href');
-    alert(testing);
-});
-};
-</script>
-{% endblock %}
